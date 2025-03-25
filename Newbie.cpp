@@ -26,7 +26,13 @@ private:
         node->right = nullptr;
         node->color = false; // Black
     }
-
+    void inOrderHelper(Node* node) {
+        if (node != TNULL) {
+            inOrderHelper(node->left);
+            cout << node->key << ": " << node->value << " ";
+            inOrderHelper(node->right);
+        }
+    }
 public:
     RedBlackTree() {
         TNULL = new Node;
@@ -36,5 +42,15 @@ public:
 
     ~RedBlackTree() {
         // Placeholder for destructor logic
+    }
+    void inOrderTraversal() {
+        inOrderHelper(root);
+        cout << endl;
+    }
+
+    // Placeholder for insert functionality
+    void insert(int key, string value) {
+        cout << "Insert function called with key: " << key << " and value: " << value << endl;
+        // Placeholder logic for inserting nodes
     }
 };
