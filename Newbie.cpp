@@ -53,4 +53,18 @@ public:
         cout << "Insert function called with key: " << key << " and value: " << value << endl;
         // Placeholder logic for inserting nodes
     }
+    Node* searchTreeHelper(Node* node, int key) {
+        if (node == TNULL || key == node->key) {
+            return node;
+        }
+        if (key < node->key) {
+            return searchTreeHelper(node->left, key);
+        }
+        return searchTreeHelper(node->right, key);
+    }
+    
+    Node* search(int key) {
+        return searchTreeHelper(root, key);
+    }
+    
 };
