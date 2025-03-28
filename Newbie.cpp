@@ -74,6 +74,46 @@ private:
         if (node == TNULL) return 0;
         return 1 + countNodes(node->left) + countNodes(node->right);
     }
+    void fixInsert(Node *node) {
+        Node *uncle;
+        while (node->parent && node->parent->color) {
+            if (node->parent == node->parent->parent->left) {
+                uncle = node->parent->parent->right;
+                if (uncle && uncle->color) {
+                    node->parent->color = false;
+                    uncle->color = false;
+                    node->parent->parent->color = true;
+                    node = node->parent->parent;
+                } else {
+                    if (node == node->parent->right) {
+                        node = node->parent;
+                        leftRotate(node);
+                    }
+                    node->parent->color = false;
+                    node->parent->parent->color = true;
+                    rightRotate(node->parent->parent);
+                }
+            } else {
+                uncle = node->parent->parent->left;
+                if (uncle && uncle->color) {
+                    node->parent->color = false;
+                    uncle->color = false;
+                    node->parent->parent->color = true;
+                    node = node->parent->parent;
+                } else {
+                    if (node == node->parent->left) {
+                        node = node->parent;
+                        rightRotate(node);
+                    }
+                    node->parent->color = false;
+                    node->parent->parent->color = true;
+                    leftRotate(node->parent->parent);
+                }
+            }
+            if (node == root) break;
+        }
+        root->color = false;
+    }
 public:
     RedBlackTree() {
         TNULL = new Node;
@@ -89,11 +129,6 @@ public:
         cout << endl;
     }
 
-    // Placeholder for insert functionality
-    void insert(int key, string value) {
-        cout << "Insert function called with key: " << key << " and value: " << value << endl;
-        // Placeholder logic for inserting nodes
-    }
     Node* searchTreeHelper(Node* node, int key) {
         if (node == TNULL || key == node->key) {
             return node;
@@ -104,8 +139,46 @@ public:
         return searchTreeHelper(node->right, key);
     }
     
-    Node* search(int key) {
-        return searchTreeHelper(root, key);
+    void insert(int key, const string &value) {
+        Node *node = new Node;
+        node->parent = nullptr;
+        node->key = key;
+        node->value = value;
+        node->left = TNULL;
+        node->right = TNULL;
+        node->color = true;
+
+        Node *parent = nullptr;
+        Node *current = root;
+
+        while (current != TNULL) {
+            parent = current;
+            if (key < current->key) current = current->left;
+            else current = current->right;
+        }
+
+        node->parent = parent;
+        if (!parent) root = node;
+        else if (key < parent->key) parent->left = node;
+        else parent->right = node;
+
+        if (!node->parent) {
+            node->color = false;
+            return;
+        }
+
+        if (!node->parent->parent) return;
+
+        fixInsert(node);
+    }
+
+    Node *search(int key) {
+        Node *current = root;
+        while (current != TNULL && current->key != key) {
+            if (key < current->key) current = current->left;
+            else current = current->right;
+        }
+        return current;
     }
     
 };
