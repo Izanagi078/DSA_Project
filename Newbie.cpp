@@ -62,6 +62,18 @@ private:
         y->right = x;
         x->parent = y;
     }
+    string categorizeKey(int key) {
+        if (key >= 101 && key <= 199) return "Fruits";
+        if (key >= 201 && key <= 299) return "Dairy";
+        if (key >= 301 && key <= 399) return "Bakery";
+        if (key >= 401 && key <= 499) return "Grains";
+        return "Other";
+    }
+
+    int countNodes(Node *node) {
+        if (node == TNULL) return 0;
+        return 1 + countNodes(node->left) + countNodes(node->right);
+    }
 public:
     RedBlackTree() {
         TNULL = new Node;
