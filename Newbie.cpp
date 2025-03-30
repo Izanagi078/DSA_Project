@@ -74,6 +74,14 @@ private:
         if (node == TNULL) return 0;
         return 1 + countNodes(node->left) + countNodes(node->right);
     }
+    void inorderForCategories(Node *node, map<string, vector<string>> &categories) {
+        if (node != TNULL) {
+            inorderForCategories(node->left, categories);
+            string category = categorizeKey(node->key);
+            categories[category].push_back(node->value);
+            inorderForCategories(node->right, categories);
+        }
+    }
     void fixInsert(Node *node) {
         Node *uncle;
         while (node->parent && node->parent->color) {
