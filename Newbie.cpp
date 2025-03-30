@@ -132,9 +132,13 @@ public:
     ~RedBlackTree() {
         // Placeholder for destructor logic
     }
-    void inOrderTraversal() {
-        inOrderHelper(root);
-        cout << endl;
+
+    void inorderTraversal(Node *node, ostream &out) {
+        if (node != TNULL) {
+            inorderTraversal(node->left, out);
+            out << node->key << " " << node->value << "\n";
+            inorderTraversal(node->right, out);
+        }
     }
 
     Node* searchTreeHelper(Node* node, int key) {
@@ -187,6 +191,31 @@ public:
             else current = current->right;
         }
         return current;
+    }
+    void updateFile(const string &filename) {
+        ofstream file(filename);
+        if (!file.is_open()) {
+            cerr << "Error: Could not open file " << filename << " for writing!" << endl;
+            return;
+        }
+        inorderTraversal(root, file);
+        file.close();
+        cout << "Tree state written to " << filename << "!" << endl;
+    }
+    
+
+    void loadDataFromFile(const string &filename) {
+        ifstream file(filename);
+        if (!file.is_open()) {
+            cerr << "Error: File could not be opened!" << endl;
+            return;
+        }
+        int key;
+        string value;
+        while (file >> key >> value) {
+            insert(key, value);
+        }
+        file.close();
     }
     
 };
